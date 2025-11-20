@@ -1,0 +1,55 @@
+<%- include('../layouts/header') %>
+
+<div class="page-header">
+    <h1><%= title %></h1>
+    <div class="header-actions">
+        <a href="/prestamos" class="btn btn-secondary">Ver Todos</a>
+        <a href="/prestamos/crear" class="btn btn-primary">Registrar Préstamo</a>
+    </div>
+</div>
+
+<% if (prestamos && prestamos.length > 0) { %>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Libro</th>
+            <th>Fecha Préstamo</th>
+            <th>Fecha Devolución</th>
+            <th>Días Restantes</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% prestamos.forEach(prestamo => { %>
+        <tr>
+            <td><%= prestamo.id %></td>
+            <td><%= prestamo.usuario %></td>
+            <td><%= prestamo.libro %></td>
+            <td><%= new Date(prestamo.fecha_prestamo).toLocaleDateString('es-GT') %></td>
+            <td><%= new Date(prestamo.fecha_devolucion_esperada).toLocaleDateString('es-GT') %></td>
+            <td>
+                <% if (prestamo.dias_retraso < 0) { %>
+                    <span class="text-success"><%= Math.abs(prestamo.dias_retraso) %> días</span>
+                <% } else if (prestamo.dias_retraso === 0) { %>
+                    <span class="text-warning">Hoy vence</span>
+                <% } else { %>
+                    <span class="text-danger">Atrasado <%= prestamo.dias_retraso %> días</span>
+                <% } %>
+            </td>
+            <td class="actions">
+                <a href="/devoluciones/crear" class="btn btn-sm btn-success">Devolver</a>
+            </td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+<% } else { %>
+<div class="alert alert-info">
+    <p>No hay préstamos activos en este momento.</p>
+    <a href="/prestamos/crear" class="btn btn-primary">Registrar un préstamo</a>
+</div>
+<% } %>
+
+<%- include('../layouts/footer') %>

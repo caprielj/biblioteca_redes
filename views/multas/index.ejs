@@ -1,0 +1,78 @@
+<%- include('../layouts/header') %>
+
+<div class="page-header">
+    <h1><%= title %></h1>
+</div>
+
+<% if (multas && multas.length > 0) { %>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Monto</th>
+            <th>Motivo</th>
+            <th>Fecha Multa</th>
+            <th>Fecha Pago</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% multas.forEach(multa => { %>
+        <tr>
+            <td><%= multa.id %></td>
+            <td><%= multa.usuario %></td>
+            <td class="text-danger">Q <%= parseFloat(multa.monto).toFixed(2) %></td>
+            <td><%= multa.motivo %></td>
+            <td><%= new Date(multa.fecha_multa).toLocaleDateString('es-GT') %></td>
+            <td>
+                <% if (multa.fecha_pago) { %>
+                    <%= new Date(multa.fecha_pago).toLocaleDateString('es-GT') %>
+                <% } else { %>
+                    <span class="text-muted">Pendiente</span>
+                <% } %>
+            </td>
+            <td><span class="badge badge-<%= multa.estado %>"><%= multa.estado %></span></td>
+            <td class="actions">
+                <a href="/multas/detalle/<%= multa.id %>" class="btn btn-sm btn-info">Ver</a>
+                <% if (multa.estado === 'pendiente') { %>
+                    <form action="/multas/pagar/<%= multa.id %>" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('¿Confirmar pago de esta multa?')">Pagar</button>
+                    </form>
+                    <form action="/multas/condonar/<%= multa.id %>" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-warning" onclick="return confirm('¿Condonar esta multa?')">Condonar</button>
+                    </form>
+                <% } %>
+                <form action="/multas/eliminar/<%= multa.id %>" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro de eliminar esta multa?')">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<!-- Resumen de Multas -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Total Multas Pendientes</h3>
+        <p class="stat-number text-danger">
+            Q <%= parseFloat(multas.filter(m => m.estado === 'pendiente').reduce((sum, m) => sum + parseFloat(m.monto), 0)).toFixed(2) %>
+        </p>
+    </div>
+    <div class="stat-card">
+        <h3>Total Multas Pagadas</h3>
+        <p class="stat-number text-success">
+            Q <%= parseFloat(multas.filter(m => m.estado === 'pagada').reduce((sum, m) => sum + parseFloat(m.monto), 0)).toFixed(2) %>
+        </p>
+    </div>
+</div>
+
+<% } else { %>
+<div class="alert alert-info">
+    <p>No hay multas registradas en el sistema.</p>
+</div>
+<% } %>
+
+<%- include('../layouts/footer') %>

@@ -1,0 +1,52 @@
+<%- include('../layouts/header') %>
+
+<div class="page-header">
+    <h1><%= title %></h1>
+    <a href="/devoluciones/crear" class="btn btn-primary">Registrar Devolución</a>
+</div>
+
+<% if (devoluciones && devoluciones.length > 0) { %>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Libro</th>
+            <th>Fecha Préstamo</th>
+            <th>Fecha Devolución</th>
+            <th>Días Retraso</th>
+            <th>Estado Libro</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% devoluciones.forEach(devolucion => { %>
+        <tr>
+            <td><%= devolucion.id %></td>
+            <td><%= devolucion.usuario %></td>
+            <td><%= devolucion.libro %></td>
+            <td><%= new Date(devolucion.fecha_prestamo).toLocaleDateString('es-GT') %></td>
+            <td><%= new Date(devolucion.fecha_devolucion_real).toLocaleDateString('es-GT') %></td>
+            <td>
+                <% if (devolucion.dias_retraso > 0) { %>
+                    <span class="text-danger"><%= devolucion.dias_retraso %> días</span>
+                <% } else { %>
+                    <span class="text-success">A tiempo</span>
+                <% } %>
+            </td>
+            <td><span class="badge badge-<%= devolucion.estado_libro %>"><%= devolucion.estado_libro %></span></td>
+            <td class="actions">
+                <a href="/devoluciones/detalle/<%= devolucion.id %>" class="btn btn-sm btn-info">Ver Detalle</a>
+            </td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+<% } else { %>
+<div class="alert alert-info">
+    <p>No hay devoluciones registradas.</p>
+    <a href="/devoluciones/crear" class="btn btn-primary">Registrar la primera devolución</a>
+</div>
+<% } %>
+
+<%- include('../layouts/footer') %>

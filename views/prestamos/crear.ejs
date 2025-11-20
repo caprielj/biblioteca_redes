@@ -1,0 +1,72 @@
+<%- include('../layouts/header') %>
+
+<div class="page-header">
+    <h1><%= title %></h1>
+    <a href="/prestamos" class="btn btn-secondary">Volver a Préstamos</a>
+</div>
+
+<div class="form-container">
+    <form action="/prestamos/guardar" method="POST" class="form">
+        <!-- Usuario -->
+        <div class="form-group">
+            <label for="usuario_id">Usuario *</label>
+            <select id="usuario_id" name="usuario_id" class="form-control" required>
+                <option value="">Seleccione un usuario</option>
+                <% usuarios.forEach(usuario => { %>
+                <option value="<%= usuario.id %>"><%= usuario.nombre_completo %> (<%= usuario.email %>)</option>
+                <% }) %>
+            </select>
+        </div>
+
+        <!-- Libro -->
+        <div class="form-group">
+            <label for="libro_id">Libro *</label>
+            <select id="libro_id" name="libro_id" class="form-control" required>
+                <option value="">Seleccione un libro</option>
+                <% libros.forEach(libro => { %>
+                    <% if (libro.cantidad_disponible > 0) { %>
+                    <option value="<%= libro.id %>">
+                        <%= libro.titulo %> - <%= libro.autor %> (Disponibles: <%= libro.cantidad_disponible %>)
+                    </option>
+                    <% } %>
+                <% }) %>
+            </select>
+        </div>
+
+        <!-- Fecha de Préstamo -->
+        <div class="form-group">
+            <label for="fecha_prestamo">Fecha de Préstamo *</label>
+            <input type="date" id="fecha_prestamo" name="fecha_prestamo" class="form-control" value="<%= new Date().toISOString().split('T')[0] %>" required>
+        </div>
+
+        <!-- Fecha de Devolución Esperada -->
+        <div class="form-group">
+            <label for="fecha_devolucion_esperada">Fecha de Devolución Esperada *</label>
+            <input type="date" id="fecha_devolucion_esperada" name="fecha_devolucion_esperada" class="form-control" required>
+        </div>
+
+        <!-- Observaciones -->
+        <div class="form-group">
+            <label for="observaciones">Observaciones</label>
+            <textarea id="observaciones" name="observaciones" class="form-control" rows="3"></textarea>
+        </div>
+
+        <!-- Botones -->
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Registrar Préstamo</button>
+            <a href="/prestamos" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<!-- Script para calcular fecha de devolución automáticamente (14 días después) -->
+<script>
+    document.getElementById('fecha_prestamo').addEventListener('change', function() {
+        const fechaPrestamo = new Date(this.value);
+        fechaPrestamo.setDate(fechaPrestamo.getDate() + 14); // 14 días de préstamo
+        const fechaDevolucion = fechaPrestamo.toISOString().split('T')[0];
+        document.getElementById('fecha_devolucion_esperada').value = fechaDevolucion;
+    });
+</script>
+
+<%- include('../layouts/footer') %>

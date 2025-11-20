@@ -1,0 +1,120 @@
+<%- include('../layouts/header') %>
+
+<div class="page-header">
+    <h1><%= title %></h1>
+    <a href="/libros" class="btn btn-secondary">Volver a Libros</a>
+</div>
+
+<div class="form-container">
+    <form action="/libros/guardar" method="POST" class="form">
+        <!-- Título -->
+        <div class="form-group">
+            <label for="titulo">Título *</label>
+            <input type="text" id="titulo" name="titulo" class="form-control" required>
+        </div>
+
+        <!-- ISBN -->
+        <div class="form-group">
+            <label for="isbn">ISBN</label>
+            <input type="text" id="isbn" name="isbn" class="form-control">
+        </div>
+
+        <!-- Autor -->
+        <div class="form-group">
+            <label for="autor_id">Autor *</label>
+            <select id="autor_id" name="autor_id" class="form-control" required>
+                <option value="">Seleccione un autor</option>
+                <% autores.forEach(autor => { %>
+                <option value="<%= autor.id %>"><%= autor.nombre_completo %></option>
+                <% }) %>
+            </select>
+        </div>
+
+        <!-- Editorial -->
+        <div class="form-group">
+            <label for="editorial_id">Editorial *</label>
+            <select id="editorial_id" name="editorial_id" class="form-control" required>
+                <option value="">Seleccione una editorial</option>
+                <% editoriales.forEach(editorial => { %>
+                <option value="<%= editorial.id %>"><%= editorial.nombre %></option>
+                <% }) %>
+            </select>
+        </div>
+
+        <!-- Categoría -->
+        <div class="form-group">
+            <label for="categoria_id">Categoría *</label>
+            <select id="categoria_id" name="categoria_id" class="form-control" required>
+                <option value="">Seleccione una categoría</option>
+                <% categorias.forEach(categoria => { %>
+                <option value="<%= categoria.id %>"><%= categoria.nombre %></option>
+                <% }) %>
+            </select>
+        </div>
+
+        <!-- Idioma -->
+        <div class="form-group">
+            <label for="idioma_id">Idioma *</label>
+            <select id="idioma_id" name="idioma_id" class="form-control" required>
+                <option value="">Seleccione un idioma</option>
+                <% idiomas.forEach(idioma => { %>
+                <option value="<%= idioma.id %>"><%= idioma.nombre %></option>
+                <% }) %>
+            </select>
+        </div>
+
+        <!-- Ubicación -->
+        <div class="form-group">
+            <label for="ubicacion_id">Ubicación</label>
+            <select id="ubicacion_id" name="ubicacion_id" class="form-control">
+                <option value="">Seleccione una ubicación</option>
+                <% ubicaciones.forEach(ubicacion => { %>
+                <option value="<%= ubicacion.id %>"><%= ubicacion.ubicacion_completa %></option>
+                <% }) %>
+            </select>
+        </div>
+
+        <!-- Año de Publicación -->
+        <div class="form-group">
+            <label for="año_publicacion">Año de Publicación</label>
+            <input type="number" id="año_publicacion" name="año_publicacion" class="form-control" min="1000" max="2099">
+        </div>
+
+        <!-- Número de Páginas -->
+        <div class="form-group">
+            <label for="numero_paginas">Número de Páginas</label>
+            <input type="number" id="numero_paginas" name="numero_paginas" class="form-control" min="1">
+        </div>
+
+        <!-- Cantidad Total -->
+        <div class="form-group">
+            <label for="cantidad_total">Cantidad Total *</label>
+            <input type="number" id="cantidad_total" name="cantidad_total" class="form-control" min="1" value="1" required>
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <textarea id="descripcion" name="descripcion" class="form-control" rows="3"></textarea>
+        </div>
+
+        <!-- Estado -->
+        <div class="form-group">
+            <label for="estado">Estado del Libro *</label>
+            <select id="estado" name="estado" class="form-control" required>
+                <option value="excelente">Excelente</option>
+                <option value="bueno" selected>Bueno</option>
+                <option value="regular">Regular</option>
+                <option value="malo">Malo</option>
+            </select>
+        </div>
+
+        <!-- Botones -->
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Guardar Libro</button>
+            <a href="/libros" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<%- include('../layouts/footer') %>

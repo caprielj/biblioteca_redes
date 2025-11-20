@@ -1,0 +1,63 @@
+<%- include('../layouts/header') %>
+
+<div class="page-header">
+    <h1><%= title %></h1>
+    <a href="/prestamos" class="btn btn-secondary">Volver a Préstamos</a>
+</div>
+
+<div class="form-container">
+    <h2>Información del Préstamo #<%= prestamo.id %></h2>
+
+    <div class="section">
+        <h3>Datos del Usuario</h3>
+        <p><strong>Nombre:</strong> <%= prestamo.usuario_nombre %></p>
+        <p><strong>Email:</strong> <%= prestamo.usuario_email %></p>
+    </div>
+
+    <div class="section">
+        <h3>Datos del Libro</h3>
+        <p><strong>Título:</strong> <%= prestamo.libro_titulo %></p>
+        <p><strong>ISBN:</strong> <%= prestamo.libro_isbn || 'N/A' %></p>
+    </div>
+
+    <div class="section">
+        <h3>Detalles del Préstamo</h3>
+        <p><strong>Fecha de Préstamo:</strong> <%= new Date(prestamo.fecha_prestamo).toLocaleDateString('es-GT') %></p>
+        <p><strong>Fecha de Devolución Esperada:</strong> <%= new Date(prestamo.fecha_devolucion_esperada).toLocaleDateString('es-GT') %></p>
+        <p><strong>Estado:</strong> <span class="badge badge-<%= prestamo.estado %>"><%= prestamo.estado %></span></p>
+
+        <% if (prestamo.observaciones) { %>
+        <p><strong>Observaciones:</strong> <%= prestamo.observaciones %></p>
+        <% } %>
+
+        <%
+        const fechaEsperada = new Date(prestamo.fecha_devolucion_esperada);
+        const hoy = new Date();
+        const diasDiferencia = Math.floor((hoy - fechaEsperada) / (1000 * 60 * 60 * 24));
+        %>
+
+        <% if (prestamo.estado === 'activo' && diasDiferencia > 0) { %>
+        <div class="alert alert-warning">
+            <p><strong>⚠️ Este préstamo está atrasado <%= diasDiferencia %> día(s)</strong></p>
+            <p>Multa estimada al devolver: Q <%= (diasDiferencia * 5).toFixed(2) %></p>
+        </div>
+        <% } else if (prestamo.estado === 'activo') { %>
+        <div class="alert alert-info">
+            <p>Este préstamo está activo y a tiempo.</p>
+        </div>
+        <% } %>
+    </div>
+
+    <% if (prestamo.estado === 'activo') { %>
+    <div class="form-actions">
+        <a href="/devoluciones/crear" class="btn btn-success">Registrar Devolución</a>
+        <a href="/prestamos" class="btn btn-secondary">Volver</a>
+    </div>
+    <% } else { %>
+    <div class="form-actions">
+        <a href="/prestamos" class="btn btn-secondary">Volver</a>
+    </div>
+    <% } %>
+</div>
+
+<%- include('../layouts/footer') %>

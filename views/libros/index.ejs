@@ -1,0 +1,52 @@
+<%- include('../layouts/header') %>
+
+<div class="page-header">
+    <h1><%= title %></h1>
+    <a href="/libros/crear" class="btn btn-primary">Agregar Nuevo Libro</a>
+</div>
+
+<% if (libros && libros.length > 0) { %>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>Editorial</th>
+            <th>Categoría</th>
+            <th>ISBN</th>
+            <th>Disponibles</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% libros.forEach(libro => { %>
+        <tr>
+            <td><%= libro.id %></td>
+            <td><%= libro.titulo %></td>
+            <td><%= libro.autor %></td>
+            <td><%= libro.editorial %></td>
+            <td><%= libro.categoria %></td>
+            <td><%= libro.isbn %></td>
+            <td><%= libro.cantidad_disponible %> / <%= libro.cantidad_total %></td>
+            <td><span class="badge badge-<%= libro.estado %>"><%= libro.estado %></span></td>
+            <td class="actions">
+                <a href="/libros/detalle/<%= libro.id %>" class="btn btn-sm btn-info">Ver</a>
+                <a href="/libros/editar/<%= libro.id %>" class="btn btn-sm btn-warning">Editar</a>
+                <form action="/libros/eliminar/<%= libro.id %>" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro de eliminar este libro?')">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+<% } else { %>
+<div class="alert alert-info">
+    <p>No hay libros registrados en el sistema.</p>
+    <a href="/libros/crear" class="btn btn-primary">Agregar el primer libro</a>
+</div>
+<% } %>
+
+<%- include('../layouts/footer') %>

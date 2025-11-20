@@ -1,0 +1,51 @@
+<%- include('../layouts/header') %>
+
+<div class="page-header">
+    <h1><%= title %></h1>
+    <a href="/devoluciones" class="btn btn-secondary">Volver a Devoluciones</a>
+</div>
+
+<div class="form-container">
+    <h2>Información de la Devolución #<%= devolucion.id %></h2>
+
+    <div class="section">
+        <h3>Datos del Usuario</h3>
+        <p><strong>Nombre:</strong> <%= devolucion.usuario_nombre %></p>
+    </div>
+
+    <div class="section">
+        <h3>Datos del Libro</h3>
+        <p><strong>Título:</strong> <%= devolucion.libro_titulo %></p>
+    </div>
+
+    <div class="section">
+        <h3>Detalles de la Devolución</h3>
+        <p><strong>Fecha de Devolución:</strong> <%= new Date(devolucion.fecha_devolucion_real).toLocaleDateString('es-GT') %></p>
+        <p><strong>Días de Retraso:</strong>
+            <% if (devolucion.dias_retraso > 0) { %>
+                <span class="text-danger"><%= devolucion.dias_retraso %> días</span>
+            <% } else { %>
+                <span class="text-success">A tiempo</span>
+            <% } %>
+        </p>
+        <p><strong>Estado del Libro Devuelto:</strong> <span class="badge badge-<%= devolucion.estado_libro %>"><%= devolucion.estado_libro %></span></p>
+
+        <% if (devolucion.observaciones) { %>
+        <p><strong>Observaciones:</strong> <%= devolucion.observaciones %></p>
+        <% } %>
+
+        <% if (devolucion.dias_retraso > 0) { %>
+        <div class="alert alert-warning">
+            <p><strong>⚠️ Multa Generada</strong></p>
+            <p>Se generó automáticamente una multa de Q <%= (devolucion.dias_retraso * 5).toFixed(2) %></p>
+            <p><a href="/multas" class="btn btn-sm btn-info">Ver Multas</a></p>
+        </div>
+        <% } %>
+    </div>
+
+    <div class="form-actions">
+        <a href="/devoluciones" class="btn btn-secondary">Volver</a>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>

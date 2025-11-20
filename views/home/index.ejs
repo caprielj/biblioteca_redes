@@ -1,0 +1,108 @@
+<%- include('../layouts/header') %>
+
+<h1><%= title %></h1>
+
+<!-- Tarjetas de Estadísticas -->
+<div class="stats-grid">
+    <!-- Total de Libros -->
+    <div class="stat-card">
+        <h3>Total de Libros</h3>
+        <p class="stat-number"><%= estadisticas.totalLibros %></p>
+        <p class="stat-detail">Disponibles: <%= estadisticas.librosDisponibles %></p>
+    </div>
+
+    <!-- Total de Usuarios -->
+    <div class="stat-card">
+        <h3>Total de Usuarios</h3>
+        <p class="stat-number"><%= estadisticas.totalUsuarios %></p>
+    </div>
+
+    <!-- Préstamos Activos -->
+    <div class="stat-card">
+        <h3>Préstamos Activos</h3>
+        <p class="stat-number"><%= estadisticas.totalPrestamosActivos %></p>
+    </div>
+
+    <!-- Préstamos Atrasados -->
+    <div class="stat-card warning">
+        <h3>Préstamos Atrasados</h3>
+        <p class="stat-number"><%= estadisticas.totalPrestamosAtrasados %></p>
+    </div>
+
+    <!-- Multas Pendientes -->
+    <div class="stat-card danger">
+        <h3>Multas Pendientes</h3>
+        <p class="stat-number"><%= estadisticas.totalMultasPendientes %></p>
+    </div>
+</div>
+
+<!-- Accesos Rápidos -->
+<div class="quick-actions">
+    <h2>Accesos Rápidos</h2>
+    <div class="action-buttons">
+        <a href="/prestamos/crear" class="btn btn-primary">Registrar Préstamo</a>
+        <a href="/devoluciones/crear" class="btn btn-success">Registrar Devolución</a>
+        <a href="/libros/crear" class="btn btn-info">Agregar Libro</a>
+        <a href="/usuarios/crear" class="btn btn-secondary">Agregar Usuario</a>
+    </div>
+</div>
+
+<!-- Préstamos Recientes -->
+<% if (prestamosRecientes && prestamosRecientes.length > 0) { %>
+<div class="section">
+    <h2>Préstamos Recientes</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Libro</th>
+                <th>Fecha Préstamo</th>
+                <th>Fecha Devolución</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% prestamosRecientes.forEach(prestamo => { %>
+            <tr>
+                <td><%= prestamo.usuario %></td>
+                <td><%= prestamo.libro %></td>
+                <td><%= new Date(prestamo.fecha_prestamo).toLocaleDateString('es-GT') %></td>
+                <td><%= new Date(prestamo.fecha_devolucion_esperada).toLocaleDateString('es-GT') %></td>
+                <td>
+                    <span class="badge badge-<%= prestamo.estado %>"><%= prestamo.estado %></span>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+<% } %>
+
+<!-- Préstamos Atrasados -->
+<% if (prestamosAtrasados && prestamosAtrasados.length > 0) { %>
+<div class="section">
+    <h2>Préstamos Atrasados</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Libro</th>
+                <th>Fecha Devolución</th>
+                <th>Días de Retraso</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% prestamosAtrasados.forEach(prestamo => { %>
+            <tr>
+                <td><%= prestamo.usuario %></td>
+                <td><%= prestamo.libro %></td>
+                <td><%= new Date(prestamo.fecha_devolucion_esperada).toLocaleDateString('es-GT') %></td>
+                <td class="text-danger"><%= prestamo.dias_retraso %> días</td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+<% } %>
+
+<%- include('../layouts/footer') %>

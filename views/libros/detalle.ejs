@@ -1,0 +1,74 @@
+<%- include('../layouts/header') %>
+
+<div class="page-header">
+    <h1><%= title %></h1>
+    <div class="header-actions">
+        <a href="/libros/editar/<%= libro.id %>" class="btn btn-warning">Editar</a>
+        <a href="/libros" class="btn btn-secondary">Volver</a>
+    </div>
+</div>
+
+<div class="form-container">
+    <h2><%= libro.titulo %></h2>
+
+    <div class="section">
+        <h3>Información General</h3>
+        <p><strong>ISBN:</strong> <%= libro.isbn || 'N/A' %></p>
+        <p><strong>Autor:</strong> <%= libro.autor_nombre %></p>
+        <p><strong>Editorial:</strong> <%= libro.editorial_nombre %></p>
+        <p><strong>Categoría:</strong> <%= libro.categoria_nombre %></p>
+        <p><strong>Idioma:</strong> <%= libro.idioma_nombre %></p>
+        <p><strong>Año de Publicación:</strong> <%= libro.año_publicacion || 'N/A' %></p>
+        <p><strong>Número de Páginas:</strong> <%= libro.numero_paginas || 'N/A' %></p>
+    </div>
+
+    <div class="section">
+        <h3>Disponibilidad</h3>
+        <p><strong>Cantidad Total:</strong> <%= libro.cantidad_total %></p>
+        <p><strong>Cantidad Disponible:</strong>
+            <span class="<%= libro.cantidad_disponible > 0 ? 'text-success' : 'text-danger' %>">
+                <%= libro.cantidad_disponible %>
+            </span>
+        </p>
+        <p><strong>Cantidad Prestada:</strong> <%= libro.cantidad_total - libro.cantidad_disponible %></p>
+        <p><strong>Estado Físico:</strong> <span class="badge badge-<%= libro.estado %>"><%= libro.estado %></span></p>
+    </div>
+
+    <% if (libro.ubicacion_nombre) { %>
+    <div class="section">
+        <h3>Ubicación</h3>
+        <p><strong>Ubicación en Biblioteca:</strong> <%= libro.ubicacion_nombre %></p>
+    </div>
+    <% } %>
+
+    <% if (libro.descripcion) { %>
+    <div class="section">
+        <h3>Descripción</h3>
+        <p><%= libro.descripcion %></p>
+    </div>
+    <% } %>
+
+    <div class="section">
+        <h3>Información del Sistema</h3>
+        <p><strong>Fecha de Registro:</strong> <%= new Date(libro.fecha_registro).toLocaleDateString('es-GT') %></p>
+        <p><strong>Última Actualización:</strong> <%= new Date(libro.fecha_actualizacion).toLocaleDateString('es-GT') %></p>
+    </div>
+
+    <% if (libro.cantidad_disponible > 0) { %>
+    <div class="alert alert-success">
+        <p>✓ Este libro está disponible para préstamo</p>
+        <a href="/prestamos/crear" class="btn btn-sm btn-primary">Registrar Préstamo</a>
+    </div>
+    <% } else { %>
+    <div class="alert alert-warning">
+        <p>⚠️ Este libro no está disponible. Todas las copias están prestadas.</p>
+    </div>
+    <% } %>
+
+    <div class="form-actions">
+        <a href="/libros/editar/<%= libro.id %>" class="btn btn-warning">Editar Libro</a>
+        <a href="/libros" class="btn btn-secondary">Volver</a>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>

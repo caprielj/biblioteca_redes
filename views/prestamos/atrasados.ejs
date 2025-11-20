@@ -1,0 +1,63 @@
+<%- include('../layouts/header') %>
+
+<div class="page-header">
+    <h1><%= title %></h1>
+    <div class="header-actions">
+        <a href="/prestamos" class="btn btn-secondary">Ver Todos</a>
+        <a href="/prestamos/activos" class="btn btn-info">Ver Activos</a>
+    </div>
+</div>
+
+<% if (prestamos && prestamos.length > 0) { %>
+<div class="alert alert-warning">
+    <strong>⚠️ Atención:</strong> Hay <%= prestamos.length %> préstamo(s) atrasado(s). Se recomienda contactar a los usuarios.
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Libro</th>
+            <th>Fecha Préstamo</th>
+            <th>Debió Devolver</th>
+            <th>Días de Retraso</th>
+            <th>Multa Estimada</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% prestamos.forEach(prestamo => { %>
+        <tr class="table-warning">
+            <td><%= prestamo.id %></td>
+            <td><%= prestamo.usuario %></td>
+            <td><%= prestamo.libro %></td>
+            <td><%= new Date(prestamo.fecha_prestamo).toLocaleDateString('es-GT') %></td>
+            <td><%= new Date(prestamo.fecha_devolucion_esperada).toLocaleDateString('es-GT') %></td>
+            <td class="text-danger"><strong><%= prestamo.dias_retraso %> días</strong></td>
+            <td class="text-danger">Q <%= (prestamo.dias_retraso * 5).toFixed(2) %></td>
+            <td class="actions">
+                <a href="/devoluciones/crear" class="btn btn-sm btn-success">Registrar Devolución</a>
+            </td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<div class="stats-grid">
+    <div class="stat-card danger">
+        <h3>Total Multas Estimadas</h3>
+        <p class="stat-number text-danger">
+            Q <%= prestamos.reduce((sum, p) => sum + (p.dias_retraso * 5), 0).toFixed(2) %>
+        </p>
+    </div>
+</div>
+
+<% } else { %>
+<div class="alert alert-success">
+    <p>✓ ¡Excelente! No hay préstamos atrasados en este momento.</p>
+    <a href="/prestamos" class="btn btn-primary">Ver todos los préstamos</a>
+</div>
+<% } %>
+
+<%- include('../layouts/footer') %>

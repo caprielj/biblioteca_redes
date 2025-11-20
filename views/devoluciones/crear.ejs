@@ -1,0 +1,65 @@
+<%- include('../layouts/header') %>
+
+<div class="page-header">
+    <h1><%= title %></h1>
+    <a href="/devoluciones" class="btn btn-secondary">Volver a Devoluciones</a>
+</div>
+
+<div class="form-container">
+    <form action="/devoluciones/guardar" method="POST" class="form">
+        <!-- Préstamo -->
+        <div class="form-group">
+            <label for="prestamo_id">Préstamo a Devolver *</label>
+            <select id="prestamo_id" name="prestamo_id" class="form-control" required>
+                <option value="">Seleccione un préstamo activo</option>
+                <% prestamos.forEach(prestamo => { %>
+                <option value="<%= prestamo.id %>">
+                    <%= prestamo.usuario %> - <%= prestamo.libro %>
+                    (Prestado: <%= new Date(prestamo.fecha_prestamo).toLocaleDateString('es-GT') %>,
+                    Debe devolver: <%= new Date(prestamo.fecha_devolucion_esperada).toLocaleDateString('es-GT') %>)
+                    <% if (prestamo.dias_retraso > 0) { %>
+                        - ATRASADO <%= prestamo.dias_retraso %> días
+                    <% } %>
+                </option>
+                <% }) %>
+            </select>
+        </div>
+
+        <!-- Fecha de Devolución Real -->
+        <div class="form-group">
+            <label for="fecha_devolucion_real">Fecha de Devolución *</label>
+            <input type="date" id="fecha_devolucion_real" name="fecha_devolucion_real" class="form-control" value="<%= new Date().toISOString().split('T')[0] %>" required>
+        </div>
+
+        <!-- Estado del Libro -->
+        <div class="form-group">
+            <label for="estado_libro">Estado del Libro Devuelto *</label>
+            <select id="estado_libro" name="estado_libro" class="form-control" required>
+                <option value="excelente">Excelente</option>
+                <option value="bueno" selected>Bueno</option>
+                <option value="regular">Regular</option>
+                <option value="malo">Malo</option>
+                <option value="dañado">Dañado</option>
+            </select>
+        </div>
+
+        <!-- Observaciones -->
+        <div class="form-group">
+            <label for="observaciones">Observaciones</label>
+            <textarea id="observaciones" name="observaciones" class="form-control" rows="3" placeholder="Notas sobre el estado del libro o circunstancias de la devolución"></textarea>
+        </div>
+
+        <!-- Información -->
+        <div class="alert alert-info">
+            <strong>Nota:</strong> Si el préstamo está atrasado, se generará automáticamente una multa de Q5.00 por día de retraso.
+        </div>
+
+        <!-- Botones -->
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Registrar Devolución</button>
+            <a href="/devoluciones" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<%- include('../layouts/footer') %>

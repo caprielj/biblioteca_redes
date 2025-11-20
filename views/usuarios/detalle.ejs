@@ -1,0 +1,104 @@
+<%- include('../layouts/header') %>
+
+<div class="page-header">
+    <h1><%= title %></h1>
+    <div class="header-actions">
+        <a href="/usuarios/editar/<%= usuario.id %>" class="btn btn-warning">Editar</a>
+        <a href="/usuarios" class="btn btn-secondary">Volver</a>
+    </div>
+</div>
+
+<div class="form-container">
+    <h2><%= usuario.nombre %> <%= usuario.apellido %></h2>
+
+    <div class="section">
+        <h3>Información Personal</h3>
+        <p><strong>Email:</strong> <%= usuario.email %></p>
+        <p><strong>Teléfono:</strong> <%= usuario.telefono || 'N/A' %></p>
+        <p><strong>Dirección:</strong> <%= usuario.direccion || 'N/A' %></p>
+        <p><strong>Fecha de Nacimiento:</strong>
+            <%= usuario.fecha_nacimiento ? new Date(usuario.fecha_nacimiento).toLocaleDateString('es-GT') : 'N/A' %>
+        </p>
+        <p><strong>Tipo de Usuario:</strong> <%= usuario.tipo_usuario %></p>
+        <p><strong>Estado:</strong> <span class="badge badge-<%= usuario.estado %>"><%= usuario.estado %></span></p>
+    </div>
+
+    <div class="section">
+        <h3>Información del Sistema</h3>
+        <p><strong>Fecha de Registro:</strong> <%= new Date(usuario.fecha_registro).toLocaleDateString('es-GT') %></p>
+        <p><strong>Última Actualización:</strong> <%= new Date(usuario.fecha_actualizacion).toLocaleDateString('es-GT') %></p>
+    </div>
+
+    <!-- Préstamos Activos -->
+    <% if (prestamosActivos && prestamosActivos.length > 0) { %>
+    <div class="section">
+        <h3>Préstamos Activos (<%= prestamosActivos.length %>)</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Libro</th>
+                    <th>Fecha Préstamo</th>
+                    <th>Fecha Devolución</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% prestamosActivos.forEach(prestamo => { %>
+                <tr>
+                    <td><%= prestamo.titulo %></td>
+                    <td><%= new Date(prestamo.fecha_prestamo).toLocaleDateString('es-GT') %></td>
+                    <td><%= new Date(prestamo.fecha_devolucion_esperada).toLocaleDateString('es-GT') %></td>
+                    <td><span class="badge badge-<%= prestamo.estado %>"><%= prestamo.estado %></span></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <% } else { %>
+    <div class="alert alert-info">
+        <p>Este usuario no tiene préstamos activos en este momento.</p>
+    </div>
+    <% } %>
+
+    <!-- Multas Pendientes -->
+    <% if (multasPendientes && multasPendientes.length > 0) { %>
+    <div class="section">
+        <h3>Multas Pendientes (<%= multasPendientes.length %>)</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Monto</th>
+                    <th>Motivo</th>
+                    <th>Descripción</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% multasPendientes.forEach(multa => { %>
+                <tr>
+                    <td class="text-danger">Q <%= parseFloat(multa.monto).toFixed(2) %></td>
+                    <td><%= multa.motivo %></td>
+                    <td><%= multa.descripcion || 'N/A' %></td>
+                    <td><%= new Date(multa.fecha_multa).toLocaleDateString('es-GT') %></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+        <div class="alert alert-warning">
+            <p><strong>Total de Multas Pendientes: Q <%= parseFloat(totalMultas).toFixed(2) %></strong></p>
+        </div>
+    </div>
+    <% } else { %>
+    <div class="alert alert-success">
+        <p>✓ Este usuario no tiene multas pendientes.</p>
+    </div>
+    <% } %>
+
+    <div class="form-actions">
+        <a href="/prestamos/crear" class="btn btn-primary">Registrar Préstamo</a>
+        <a href="/usuarios/editar/<%= usuario.id %>" class="btn btn-warning">Editar Usuario</a>
+        <a href="/usuarios" class="btn btn-secondary">Volver</a>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>

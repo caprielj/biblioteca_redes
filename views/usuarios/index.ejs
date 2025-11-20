@@ -1,0 +1,48 @@
+<%- include('../layouts/header') %>
+
+<div class="page-header">
+    <h1><%= title %></h1>
+    <a href="/usuarios/crear" class="btn btn-primary">Agregar Nuevo Usuario</a>
+</div>
+
+<% if (usuarios && usuarios.length > 0) { %>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre Completo</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% usuarios.forEach(usuario => { %>
+        <tr>
+            <td><%= usuario.id %></td>
+            <td><%= usuario.nombre_completo %></td>
+            <td><%= usuario.email %></td>
+            <td><%= usuario.telefono || 'N/A' %></td>
+            <td><%= usuario.tipo_usuario %></td>
+            <td><span class="badge badge-<%= usuario.estado %>"><%= usuario.estado %></span></td>
+            <td class="actions">
+                <a href="/usuarios/detalle/<%= usuario.id %>" class="btn btn-sm btn-info">Ver</a>
+                <a href="/usuarios/editar/<%= usuario.id %>" class="btn btn-sm btn-warning">Editar</a>
+                <form action="/usuarios/eliminar/<%= usuario.id %>" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro de eliminar este usuario?')">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+<% } else { %>
+<div class="alert alert-info">
+    <p>No hay usuarios registrados en el sistema.</p>
+    <a href="/usuarios/crear" class="btn btn-primary">Agregar el primer usuario</a>
+</div>
+<% } %>
+
+<%- include('../layouts/footer') %>

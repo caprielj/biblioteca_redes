@@ -1,0 +1,65 @@
+<%- include('../layouts/header') %>
+
+<div class="page-header">
+    <h1><%= title %></h1>
+    <a href="/multas" class="btn btn-secondary">Volver a Multas</a>
+</div>
+
+<div class="form-container">
+    <h2>Información de la Multa #<%= multa.id %></h2>
+
+    <div class="section">
+        <h3>Datos del Usuario</h3>
+        <p><strong>Nombre:</strong> <%= multa.usuario_nombre %></p>
+        <p><strong>Email:</strong> <%= multa.usuario_email %></p>
+    </div>
+
+    <div class="section">
+        <h3>Detalles de la Multa</h3>
+        <p><strong>Monto:</strong> <span class="text-danger" style="font-size: 1.5rem;">Q <%= parseFloat(multa.monto).toFixed(2) %></span></p>
+        <p><strong>Motivo:</strong> <%= multa.motivo %></p>
+        <p><strong>Descripción:</strong> <%= multa.descripcion || 'N/A' %></p>
+        <p><strong>Estado:</strong> <span class="badge badge-<%= multa.estado %>"><%= multa.estado %></span></p>
+        <p><strong>Fecha de la Multa:</strong> <%= new Date(multa.fecha_multa).toLocaleDateString('es-GT') %></p>
+
+        <% if (multa.fecha_pago) { %>
+        <p><strong>Fecha de Pago:</strong> <%= new Date(multa.fecha_pago).toLocaleDateString('es-GT') %></p>
+        <% } %>
+    </div>
+
+    <% if (multa.estado === 'pendiente') { %>
+    <div class="alert alert-warning">
+        <p><strong>⚠️ Esta multa está pendiente de pago</strong></p>
+    </div>
+
+    <div class="form-actions">
+        <form action="/multas/pagar/<%= multa.id %>" method="POST" style="display:inline;">
+            <button type="submit" class="btn btn-success" onclick="return confirm('¿Confirmar pago de esta multa?')">
+                Registrar Pago
+            </button>
+        </form>
+        <form action="/multas/condonar/<%= multa.id %>" method="POST" style="display:inline;">
+            <button type="submit" class="btn btn-warning" onclick="return confirm('¿Condonar esta multa?')">
+                Condonar Multa
+            </button>
+        </form>
+        <a href="/multas" class="btn btn-secondary">Volver</a>
+    </div>
+    <% } else if (multa.estado === 'pagada') { %>
+    <div class="alert alert-success">
+        <p>✓ Esta multa ha sido pagada</p>
+    </div>
+    <div class="form-actions">
+        <a href="/multas" class="btn btn-secondary">Volver</a>
+    </div>
+    <% } else if (multa.estado === 'condonada') { %>
+    <div class="alert alert-info">
+        <p>Esta multa ha sido condonada</p>
+    </div>
+    <div class="form-actions">
+        <a href="/multas" class="btn btn-secondary">Volver</a>
+    </div>
+    <% } %>
+</div>
+
+<%- include('../layouts/footer') %>
